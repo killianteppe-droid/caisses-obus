@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <title>Caisses d'Obus</title>
+  <meta name="description" content="Jeu fictif de gestion de caisses d'obus — fonctionne hors ligne.">
+
+  <!-- PWA / iPhone -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0c0e0b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Caisses">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+
+    <header class="entete">
+      <div class="entete-titre">
+        <span class="pastille" aria-hidden="true"></span>
+        <h1>Caisses d'obus</h1>
+      </div>
+      <p class="entete-sous">6 obus par caisse · 6 charges par obus</p>
+    </header>
+
+    <!-- 1. Nombre de caisses -->
+    <section class="panneau" aria-labelledby="lbl-caisses">
+      <h2 id="lbl-caisses" class="etiquette">Nombre de caisses</h2>
+      <div class="compteur">
+        <button class="btn-rond" id="moins" type="button" aria-label="Retirer une caisse">−</button>
+        <output id="caisses" class="chiffre-geant" aria-live="polite">0</output>
+        <button class="btn-rond" id="plus" type="button" aria-label="Ajouter une caisse">+</button>
+      </div>
+      <p class="aide">Maintenir appuyé pour aller plus vite</p>
+    </section>
+
+    <!-- 2. Niveau demandé -->
+    <section class="panneau" aria-labelledby="lbl-niveau">
+      <h2 id="lbl-niveau" class="etiquette">Charge demandée</h2>
+      <div class="niveaux" id="niveaux" role="radiogroup" aria-labelledby="lbl-niveau">
+        <button type="button" role="radio" data-niveau="1">1</button>
+        <button type="button" role="radio" data-niveau="2">2</button>
+        <button type="button" role="radio" data-niveau="3">3</button>
+        <button type="button" role="radio" data-niveau="4">4</button>
+        <button type="button" role="radio" data-niveau="5">5</button>
+        <button type="button" role="radio" data-niveau="6">6</button>
+      </div>
+      <div class="jauge" id="jauge" aria-hidden="true">
+        <i></i><i></i><i></i><i></i><i></i><i></i>
+      </div>
+    </section>
+
+    <!-- 3. Résultats -->
+    <section class="resultats">
+      <div class="tuile">
+        <h2 class="etiquette">Total d'obus</h2>
+        <output id="total" class="chiffre-grand">0</output>
+        <p class="detail" id="detail-total">0 caisse × 6 obus</p>
+      </div>
+      <div class="tuile">
+        <h2 class="etiquette">Charge</h2>
+        <output id="niveau-affiche" class="chiffre-grand">1<small>/6</small></output>
+        <p class="detail" id="detail-niveau">5 en trop par obus</p>
+      </div>
+    </section>
+
+    <!-- 4. Charges excédentaires -->
+    <section class="points" aria-labelledby="lbl-points">
+      <h2 id="lbl-points" class="etiquette">Charges excédentaires</h2>
+      <output id="points" class="chiffre-points" aria-live="polite">0</output>
+      <p class="detail" id="detail-points">0 obus × (6 − 1)</p>
+      <p class="detail detail-conserve" id="detail-conserve">Charges conservées : 0</p>
+    </section>
+
+    <!-- 5. Tirs par pièce -->
+    <section class="panneau" aria-labelledby="lbl-tirs">
+      <h2 id="lbl-tirs" class="etiquette">Tirs par pièce</h2>
+      <div class="pieces">
+        <div class="piece">
+          <button type="button" class="btn-piece" id="p1" aria-label="P1 tire un obus">
+            <span class="piece-nom">P1</span>
+            <span class="piece-compte" id="compte-p1">0</span>
+          </button>
+          <button type="button" class="btn-annuler-tir" id="annuler-p1">Annuler dernier tir</button>
+        </div>
+        <div class="piece">
+          <button type="button" class="btn-piece p2" id="p2" aria-label="P2 tire un obus">
+            <span class="piece-nom">P2</span>
+            <span class="piece-compte" id="compte-p2">0</span>
+          </button>
+          <button type="button" class="btn-annuler-tir" id="annuler-p2">Annuler dernier tir</button>
+        </div>
+      </div>
+      <div class="reste" id="reste-bloc">
+        <span class="reste-label">Reste</span>
+        <output id="reste" class="reste-chiffre" aria-live="polite">0</output>
+        <span class="reste-label" id="reste-unite">obus</span>
+      </div>
+
+      <div class="bilan" id="bilan" hidden>
+        <h3>Plus d'obus · Bilan</h3>
+        <p>P1 a tiré <b id="bilan-p1">0</b> obus</p>
+        <p>P2 a tiré <b id="bilan-p2">0</b> obus</p>
+        <p>Charges excédentaires : <b id="bilan-excedent">0</b></p>
+      </div>
+    </section>
+
+    <!-- 6. Réinitialiser -->
+    <button class="btn-reinit" id="reinit" type="button">Réinitialiser</button>
+
+    <footer class="pied">
+      <span id="etat-hors-ligne">Sauvegarde automatique</span>
+    </footer>
+  </main>
+
+  <!-- Message d'annulation après réinitialisation -->
+  <div class="toast" id="toast" role="status" hidden>
+    <span>Valeurs réinitialisées</span>
+    <button type="button" id="annuler">Annuler</button>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
